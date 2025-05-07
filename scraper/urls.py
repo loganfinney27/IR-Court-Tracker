@@ -1,4 +1,7 @@
 # scraper/urls.py
-def load_urls(filename="case_urls.txt"):
-    with open(filename, "r") as file:
-        return [line.strip() for line in file if line.strip()]
+import csv
+
+def load_urls(filename="case_urls.csv"):
+    with open(filename, newline='', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        return [{"topic": row["topic"], "url": row["url"]} for row in reader]

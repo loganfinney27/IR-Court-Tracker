@@ -5,16 +5,20 @@ from scraper.parser import parse_case_page
 from scraper.pipeline import write_to_csv
 
 def main():
-    urls = load_urls()
+    cases = load_urls()
     rows = []
 
-    for url in urls:
+    for case in cases:
+        topic = case["topic"]
+        url = case["url"]
+
         response = fetch_ready_page(url, delay=2)
         if response is None:
-            print(f"Skipping {url}")
+            print(f"Skipping {topic} ({url})")
             continue
 
         row = parse_case_page(response.text, url)
+        row["Topic"] = topic  # Add topic to output
         rows.append(row)
 
     write_to_csv(rows)

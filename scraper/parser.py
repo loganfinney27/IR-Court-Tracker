@@ -37,5 +37,5 @@ def parse_case_page(html, url):
         "Case": title,
         "Document": f'<a href="{url}">Original Filing</a>',
         "Updated": latest_date,
-        "Document": f'<a href="{latest_link}">Latest Filing</a>'
+        "Newest": f'<a href="{latest_link}">Latest Filing</a>'
     }
