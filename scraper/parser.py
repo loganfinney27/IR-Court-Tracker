@@ -34,8 +34,8 @@ def parse_case_page(html, url):
             latest_link = urljoin(base_url, a_tag["href"])
 
     return {
-        "Title": title,
-        "Link": f'<a href="{url}">Original Filing</a>',
-        "Date of latest entry": latest_date,
-        "Link of latest entry": f'<a href="{latest_link}">Latest Filing</a>'
+        "Case": title,
+        "Document": f'<a href="{url}">Original Filing</a>',
+        "Updated": latest_date,
+        "Document": f'<a href="{latest_link}">Latest Filing</a>'
     }
