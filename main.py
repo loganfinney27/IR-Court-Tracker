@@ -26,8 +26,7 @@ def main():
             print(f"Skipping {topic} ({url})")
             continue
 
-        row = parse_case_page(response.text, url, detail=detail)
-        row = parse_case_page(response.text, url, topic=topic)
+        row = parse_case_page(response.text, url, detail=detail, topic=topic)
         rows.append(row)
 
     write_to_csv(rows)
