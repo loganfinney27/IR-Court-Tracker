@@ -1,4 +1,5 @@
 # main.py
+from git import Repo
 import os
 from scraper.urls import load_urls
 from scraper.fetch import fetch_ready_page
@@ -28,7 +29,18 @@ def main():
         row["Topic"] = topic
         rows.append(row)
 
+def commit_and_push_outputs():
+    repo = Repo(os.getcwd())
+    repo.git.add("output.csv")
+    repo.git.add("failed_urls.csv")
+
+    if repo.is_dirty(untracked_files=True):
+        repo.index.commit("Auto-update output files from GitHub Action run")
+        origin = repo.remote(name="origin")
+        origin.push()
+
     write_to_csv(rows)
+    commit_and_push_outputs()
 
 if __name__ == "__main__":
     main()
