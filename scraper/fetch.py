@@ -17,10 +17,13 @@ def get_headers():
 def fetch_ready_page(url, session=session, headers=None, max_retries=5, delay=5):
     headers = headers or get_headers()
     for attempt in range(max_retries):
-        response = session.get(url, headers=headers)
-        if response.status_code == 200:
-            return response
-        print(f"Attempt {attempt + 1}: Status {response.status_code}, retrying in {delay} seconds...")
+        try:
+            response = session.get(url, headers=headers)
+            if response.status_code == 200:
+                return response
+            print(f"Attempt {attempt + 1}: Status {response.status_code}, retrying in {delay} seconds...")
+        except requests.exceptions.RequestException as e:
+            print(f"Attempt {attempt + 1}: Error fetching {url} - {e}, retrying in {delay} seconds...")
         time.sleep(delay)
     print(f"Failed to fetch {url} after {max_retries} attempts.")
     return None
