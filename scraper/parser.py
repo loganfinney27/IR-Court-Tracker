@@ -23,7 +23,7 @@ def parse_case_page(html, url, detail="", topic=""):
                 raw_date = value_span.get_text(strip=True)
                 try:
                     parsed_date = datetime.strptime(raw_date, "%B %d, %Y")
-                    date_filed = parsed_date.strftime("%B %d, %Y")
+                    date_filed = parsed_date.strftime("%b %d, %Y")
                 except ValueError:
                     date_filed = raw_date
             break
@@ -41,7 +41,7 @@ def parse_case_page(html, url, detail="", topic=""):
             raw_date = date_match.group(0)
             try:
                 parsed_date = datetime.strptime(raw_date, "%b %d, %Y")
-                latest_date = parsed_date.strftime("%B %d, %Y")
+                latest_date = parsed_date.strftime("%b %d, %Y")
             except ValueError:
                 latest_date = raw_date
 
