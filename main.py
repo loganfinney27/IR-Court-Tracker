@@ -27,6 +27,7 @@ def main():
             continue
 
         row = parse_case_page(response.text, url, detail=detail)
+        row = parse_case_page(response.text, url, topic=topic)
         rows.append(row)
 
     write_to_csv(rows)
