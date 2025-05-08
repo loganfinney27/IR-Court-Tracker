@@ -17,6 +17,7 @@ def main():
     for case in cases:
         topic = case["topic"]
         url = case["url"]
+        detail = case["detail"]
 
         response = fetch_ready_page(url, delay=2)
         if response is None:
@@ -25,8 +26,7 @@ def main():
             print(f"Skipping {topic} ({url})")
             continue
 
-        row = parse_case_page(response.text, url)
-        row["Topic"] = topic
+        row = parse_case_page(response.text, url, detail=detail)
         rows.append(row)
 
     write_to_csv(rows)
