@@ -22,7 +22,7 @@ def parse_case_page(html, url, detail="", topic=""):
             if value_span:
                 raw_date = value_span.get_text(strip=True)
                 try:
-                    parsed_date = datetime.strptime(raw_date, "%B %d, %Y")
+                    parsed_date = datetime.strptime(raw_date, "%b %d, %Y")
                     date_filed = parsed_date.strftime("%b %d, %Y")
                 except ValueError:
                     date_filed = raw_date
