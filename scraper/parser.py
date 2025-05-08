@@ -9,7 +9,7 @@ def parse_case_page(html, url):
     soup = BeautifulSoup(html, "html.parser")
 
     full_title = soup.title.string.strip() if soup.title else "N/A"
-    title = full_title.split(", \d")[0]
+    title = re.split(r", \d", full_title)[0]
 
     entry_divs = soup.find_all("div", id=lambda x: x and x.startswith("entry-"))
 
