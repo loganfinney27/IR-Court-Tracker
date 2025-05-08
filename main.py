@@ -22,8 +22,8 @@ def main():
         if response is None:
             reason = "Failed to fetch (non-200 response)"
             log_failure(topic, url, reason)
-        print(f"Skipping {topic} ({url})")
-        continue
+            print(f"Skipping {topic} ({url})")
+            continue
 
         row = parse_case_page(response.text, url)
         row["Topic"] = topic
