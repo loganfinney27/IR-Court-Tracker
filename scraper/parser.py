@@ -54,5 +54,5 @@ def parse_case_page(html, url, detail="", topic=""):
         "Topic": topic,
         "Original": f'<a href="{url}">{date_filed}</a>',
         "Latest": f'<a href="{latest_link}">{latest_date}</a>',
-        "Detail": detail,
+        "Tag": detail,
     }

@@ -6,7 +6,7 @@ def write_to_csv(rows, filename="output.csv"):
         print("No data to write.")
         return
 
-    fieldnames = ["Case", "Topic", "Original", "Latest", "Detail"]
+    fieldnames = ["Case", "Topic", "Original", "Latest", "Tag"]
 
     with open(filename, mode="w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
