@@ -20,10 +20,10 @@ def parse_case_page(html, url, detail="", topic=""):
         if "Date Filed:" in header.get_text():
             value_span = header.find_next_sibling("span", class_="meta-data-value")
             if value_span:
-                raw_date = value_span.get_text(strip=True)
+                raw_date = value_span.get_text(strip=True).replace('.', '')
                 try:
-                    parsed_date = datetime.strptime(raw_date, "%b %d, %Y")
-                    date_filed = parsed_date.strftime("%b %d, %Y")
+                    parsed_date = datetime.strptime(raw_date, "%B %d, %Y")
+                    date_filed = parsed_date.strftime("%B %d, %Y")
                 except ValueError:
                     date_filed = raw_date
             break
@@ -38,7 +38,7 @@ def parse_case_page(html, url, detail="", topic=""):
 
         date_match = re.search(r"[A-Z][a-z]{2} \d{1,2}, \d{4}", entry_text)
         if date_match:
-            raw_date = date_match.group(0)
+            raw_date = date_match.group(0).replace('.', '')
             try:
                 parsed_date = datetime.strptime(raw_date, "%b %d, %Y")
                 latest_date = parsed_date.strftime("%b %d, %Y")
