@@ -36,7 +36,7 @@ def parse_case_page(html, url, detail="", topic=""):
         latest_entry = entry_divs[-1]
         entry_text = latest_entry.get_text(separator=" ", strip=True)
 
-        date_match = re.search(r"[A-Z][a-z]{2} \d{1,2}, \d{4}", entry_text)
+        date_match = re.search(r"[A-Z][a-z]{2}\.? \d{1,2}, \d{4}", entry_text)
         if date_match:
             raw_date = date_match.group(0).replace('.', '')
             try:
