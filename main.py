@@ -1,5 +1,6 @@
 # main.py
 import os
+import csv
 from scraper.urls import load_urls
 from scraper.fetch import fetch_ready_page
 from scraper.parser import parse_case_page
@@ -10,6 +11,10 @@ from scraper.commit import commit_and_push_outputs
 def main():
     if os.path.exists("failed_urls.csv"):
         os.remove("failed_urls.csv")
+
+    with open("failed_urls.csv", mode="w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Topic", "URL", "Reason"])
 
     cases = load_urls()
     rows = []
