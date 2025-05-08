@@ -20,7 +20,7 @@ def main():
 
         response = fetch_ready_page(url, delay=2)
         if response is None:
-            reason = "Failed to fetch (non-200 response)"
+            reason = "Failed to fetch (network error or non-200 response)"
             log_failure(topic, url, reason)
             print(f"Skipping {topic} ({url})")
             continue
