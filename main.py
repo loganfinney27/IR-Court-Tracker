@@ -11,6 +11,10 @@ def main():
     if os.path.exists("failed_urls.csv"):
         os.remove("failed_urls.csv")
 
+    with open("failed_urls.csv", mode="w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Topic", "URL", "Reason"])
+
     cases = load_urls()
     rows = []
 
