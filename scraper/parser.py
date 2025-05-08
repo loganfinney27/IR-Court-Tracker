@@ -15,7 +15,7 @@ def parse_case_page(html, url, detail="", topic=""):
     court_name = court_name_tag.get_text(strip=True) if court_name_tag else "N/A"
 
     date_filed = "N/A"
-    headers = soup.find_all("span", class_="metadata-header")
+    headers = soup.find_all("span", class_="meta-data-header")
     for header in headers:
         if "Date Filed:" in header.get_text():
             value_span = header.find_next_sibling("span", class_="meta-data-value")
