@@ -14,8 +14,13 @@ def commit_and_push_outputs():
 
     try:
         repo.git.add("output.csv")
-        repo.git.add("failed_urls.csv")
-        print("Files staged.")
+        print("Staged output.csv.")
+
+        if os.path.exists("failed_urls.csv"):
+            repo.git.add("failed_urls.csv")
+            print("Staged failed_urls.csv.")
+        else:
+            print("No failed_urls.csv to stage.")
     except Exception as e:
         print(f"Error staging files: {e}")
         return
