@@ -40,6 +40,7 @@ def commit_and_push_outputs():
         origin.push()
 
     write_to_csv(rows)
+
     commit_and_push_outputs()
 
 if __name__ == "__main__":
