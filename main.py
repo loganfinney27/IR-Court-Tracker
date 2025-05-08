@@ -29,6 +29,8 @@ def main():
         row["Topic"] = topic
         rows.append(row)
 
+    write_to_csv(rows)
+
 def commit_and_push_outputs():
     repo = Repo(os.getcwd())
     repo.git.add("output.csv")
@@ -38,8 +40,6 @@ def commit_and_push_outputs():
         repo.index.commit("Auto-update output files from GitHub Action run")
         origin = repo.remote(name="origin")
         origin.push()
-
-    write_to_csv(rows)
 
     commit_and_push_outputs()
 
