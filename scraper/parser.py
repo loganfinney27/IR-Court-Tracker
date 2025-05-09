@@ -12,7 +12,12 @@ def parse_case_page(html, url, detail="", topic=""):
     title = re.split(r", \d", full_title)[0]
 
     court_name_tag = soup.find("h2")
-    court_name = court_name_tag.get_text(strip=True) if court_name_tag else "N/A"
+    court_name = "N/A"
+main_col = soup.find("div", class_="col-md-9")
+if main_col:
+    h2_tags = main_col.find_all("h2")
+    if h2_tags:
+        court_name = h2_tags[0].get_text(strip=True)
 
     date_filed = "N/A"
     headers = soup.find_all("span", class_="meta-data-header")
