@@ -1,6 +1,7 @@
 # scraper/pipeline.py
 import csv
 
+
 def write_to_csv(rows, filename="output.csv"):
     if not rows:
         print("No data to write.")

@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 from datetime import datetime
 import re
 
+
 def parse_case_page(html, url, detail="", topic=""):
     base_url = "https://www.courtlistener.com"
     soup = BeautifulSoup(html, "html.parser")
