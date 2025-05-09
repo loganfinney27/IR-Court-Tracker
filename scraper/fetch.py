@@ -11,11 +11,14 @@ user_agents = [
     "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0"
 ]
 
+
 def get_headers():
     return {"User-Agent": random.choice(user_agents)}
 
+
 def jittered_delay(base=2.0, variance=0.5):
     time.sleep(random.uniform(base - variance, base + variance))
+
 
 def fetch_ready_page(url, session=session, headers=None, max_retries=5, delay=2):
     headers = headers or get_headers()
@@ -23,15 +26,29 @@ def fetch_ready_page(url, session=session, headers=None, max_retries=5, delay=2)
     for attempt in range(max_retries):
         try:
             response = session.get(url, headers=headers, timeout=10)
+
+            # Retry on 202, 429, 503 (and optionally other 5xx)
             if response.status_code == 200:
                 return response
 
-            print(f"Attempt {attempt + 1}: Status {response.status_code}, retrying...")
+            elif response.status_code in {202, 429, 503}:
+                print(f"Attempt {attempt + 1}: Status {response.status_code}, retrying...")
+
+                if response.status_code == 429 and "Retry-After" in response.headers:
+                    retry_after = int(response.headers["Retry-After"])
+                    print(f"Retry-After header present. Waiting {retry_after} seconds.")
+                    time.sleep(retry_after)
+                else:
+                    jittered_delay(base=delay, variance=0.5)
+
+            else:
+                print(f"Attempt {attempt + 1}: Unhandled status {response.status_code}, not retrying.")
+                break
 
         except requests.exceptions.RequestException as e:
             print(f"Attempt {attempt + 1}: Error fetching {url} - {e}, retrying...")
-
-        jittered_delay(base=delay, variance=0.5)
+            jittered_delay(base=delay, variance=0.5)
 
     print(f"Failed to fetch {url} after {max_retries} attempts.")
     return None
+
