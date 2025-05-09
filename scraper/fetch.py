@@ -14,6 +14,7 @@ user_agents = [
 def get_headers():
     return {"User-Agent": random.choice(user_agents)}
 
+
 def fetch_ready_page(url, session=session, headers=None, max_retries=5, delay=5):
     headers = headers or get_headers()
     for attempt in range(max_retries):
