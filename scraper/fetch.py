@@ -11,7 +11,11 @@ user_agents = [
     "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0"
 ]
 
-fetches = fetch_ready_page, fetch_first_entry_page, fetch_latest_entry_page
+fetches = [
+    fetch_ready_page,
+    fetch_first_entry_page,
+    fetch_latest_entry_page
+]
 
 
 def get_headers():
