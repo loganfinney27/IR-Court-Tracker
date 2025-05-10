@@ -3,56 +3,61 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from datetime import datetime
 import re
+from scraper.fetch import fetch_ready_page, fetch_first_entry_page, fetch_latest_entry_page
+
+
+def extract_entry_data(html, base_url):
+    soup = BeautifulSoup(html, "html.parser")
+    entry_div = soup.find("div", id=lambda x: x and x.startswith("entry-"))
+    if not entry_div:
+        return "N/A", "N/A"
+
+    entry_text = entry_div.get_text(separator=" ", strip=True)
+    date_match = re.search(r"[A-Z][a-z]{2}\.? \d{1,2}, \d{4}", entry_text)
+
+    if date_match:
+        raw_date = date_match.group(0).replace('.', '')
+        try:
+            parsed = datetime.strptime(raw_date, "%b %d, %Y")
+            date = parsed.strftime("%b %d, %Y")
+        except ValueError:
+            date = raw_date
+    else:
+        date = "N/A"
+
+    a_tag = entry_div.find("a", href=True)
+    link = urljoin(base_url, a_tag["href"]) if a_tag else "N/A"
+
+    return date, link
+
 
 def parse_case_page(html, url, detail="", topic=""):
     base_url = "https://www.courtlistener.com"
     soup = BeautifulSoup(html, "html.parser")
 
+    # ---- Case Title ----
     full_title = soup.title.string.strip() if soup.title else "N/A"
-    title = re.split(r", \d", full_title)[0]
+    title = re.split(r",\s*\d", full_title)[0]
 
-    court_name_tag = soup.find("h2")
-    court_name = court_name_tag.get_text(strip=True) if court_name_tag else "N/A"
+    # ---- Court Name ----
+    court_h2 = soup.find("h2")
+    court = court_h2.get_text(strip=True) if court_h2 else "N/A"
 
-    date_filed = "N/A"
-    headers = soup.find_all("span", class_="meta-data-header")
-    for header in headers:
-        if "Date Filed:" in header.get_text():
-            value_span = header.find_next_sibling("span", class_="meta-data-value")
-            if value_span:
-                raw_date = value_span.get_text(strip=True).replace('.', '')
-                try:
-                    parsed_date = datetime.strptime(raw_date, "%B %d, %Y")
-                    date_filed = parsed_date.strftime("%B %d, %Y")
-                except ValueError:
-                    date_filed = raw_date
-            break
+    # ---- Fetch first and latest entries ----
+    orig_resp = fetch_first_entry_page(url)
+    last_resp = fetch_latest_entry_page(url)
 
-    entry_divs = soup.find_all("div", id=lambda x: x and x.startswith("entry-"))
-    latest_date = "N/A"
-    latest_link = "N/A"
-
-    if entry_divs:
-        latest_entry = entry_divs[-1]
-        entry_text = latest_entry.get_text(separator=" ", strip=True)
-
-        date_match = re.search(r"[A-Z][a-z]{2}\.? \d{1,2}, \d{4}", entry_text)
-        if date_match:
-            raw_date = date_match.group(0).replace('.', '')
-            try:
-                parsed_date = datetime.strptime(raw_date, "%b %d, %Y")
-                latest_date = parsed_date.strftime("%b %d, %Y")
-            except ValueError:
-                latest_date = raw_date
-
-        a_tag = latest_entry.find("a", href=True)
-        if a_tag:
-            latest_link = urljoin(base_url, a_tag["href"])
+    orig_date, orig_link = (
+        extract_entry_data(orig_resp.text, base_url) if orig_resp else ("N/A", "N/A")
+    )
+    latest_date, latest_link = (
+        extract_entry_data(last_resp.text, base_url) if last_resp else ("N/A", "N/A")
+    )
 
     return {
-        "Case":  f'<a href="{url}">{title}</a>',
+        "Case": f'<a href="{url}">{title}</a>',
         "Topic": topic,
-        "Original": f'<a href="{url}">{date_filed}</a>',
-        "Latest": f'<a href="{latest_link}">{latest_date}</a>',
+        "Original": f'<a href="{orig_link}">{orig_date}</a>',
+        "Latest":  f'<a href="{latest_link}">{latest_date}</a>',
         "Tag": detail,
     }
