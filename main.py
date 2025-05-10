@@ -8,6 +8,7 @@ from scraper.pipeline import write_to_csv
 from scraper.failures import log_failure
 from scraper.commit import commit_and_push_outputs
 
+
 def main():
     if os.path.exists("failed_urls.csv"):
         os.remove("failed_urls.csv")
