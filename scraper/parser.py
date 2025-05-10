@@ -55,7 +55,6 @@ def parse_case_page(html, url, detail="", topic=""):
     )
 
     return {
-        "Court": court,
         "Case": f'<a href="{url}">{title}</a>',
         "Topic": topic,
         "Original": f'<a href="{orig_link}">{orig_date}</a>',

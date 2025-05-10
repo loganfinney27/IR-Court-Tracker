@@ -22,14 +22,18 @@ def jittered_delay(base=2.0, variance=0.5):
 
 def fetch_ready_page(url, session=session, headers=None, max_retries=5, delay=2):
     headers = headers or get_headers()
+    fast_fail_statuses = {400, 401, 403, 404}
 
     for attempt in range(max_retries):
         try:
             response = session.get(url, headers=headers, timeout=10)
 
-            # Retry on 202, 429, 503 (and optionally other 5xx)
             if response.status_code == 200:
                 return response
+
+            elif response.status_code in fast_fail_statuses:
+                print(f"Attempt {attempt + 1}: Status {response.status_code} - Not retrying.")
+                return None
 
             elif response.status_code in {202, 429, 503}:
                 print(f"Attempt {attempt + 1}: Status {response.status_code}, retrying...")
