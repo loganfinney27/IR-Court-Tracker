@@ -40,5 +40,6 @@ def main():
 
     commit_and_push_outputs()
 
+
 if __name__ == "__main__":
     main()

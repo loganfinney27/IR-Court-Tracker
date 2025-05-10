@@ -31,12 +31,14 @@ def extract_entry_data(html, base_url):
     return date, link
 
 
+
 def parse_case_page(html, url, detail="", topic=""):
     base_url = "https://www.courtlistener.com"
     soup = BeautifulSoup(html, "html.parser")
 
     # ---- Case Title ----
     full_title = soup.title.string.strip() if soup.title else "N/A"
+
     title = re.split(r",\s*\d", full_title)[0]
 
     # ---- Court Name ----

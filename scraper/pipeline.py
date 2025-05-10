@@ -8,7 +8,7 @@ def write_to_csv(new_rows, filename="output.csv"):
         print("No data to write.")
         return
 
-    fieldnames = ["Case", "Topic", "Original", "Latest", "Tag"]
+    fieldnames = ["Court", "Case", "Topic", "Original", "Latest", "Tag"]
 
     # Step 1: Load existing rows into a dict
     existing_data = {}
