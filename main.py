@@ -18,6 +18,7 @@ def main():
         writer.writerow(["Topic", "URL", "Reason"])
 
     cases = load_urls()
+
     rows = []
 
     for case in cases:
