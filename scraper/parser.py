@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from datetime import datetime
 import re
-from scraper.fetch import fetches
+from scraper.fetch import fetch_ready_page fetch_first_entry_page fetch_latest_entry_page
 
 
 def extract_entry_data(html, base_url):
