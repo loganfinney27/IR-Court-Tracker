@@ -1,4 +1,5 @@
-# scraper/fetch.pyimport time
+# scraper/fetch.py
+import time
 import random
 import requests
 
