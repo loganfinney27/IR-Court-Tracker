@@ -28,14 +28,22 @@ def main():
         url = case["url"]
         detail = case["detail"]
 
-        row = parse_case_page(url, detail=detail, topic=topic)
-        if row is None:
-            reason = "Failed to fetch main case page"
-            log_failure(topic, url, reason)
-            print(f"Skipping {topic} ({url}) - {reason}")
-            continue
+    row = parse_case_page(url, detail=detail, topic=topic)
+    if row is None:
+        reason = "Failed to fetch main case page"
+        log_failure(topic, url, reason)
+        print(f"Skipping {topic} ({url}) - {reason}")
 
-        rows.append(row)
+        # Fallback row: reuse existing data to avoid blanks
+        row = {
+            "Case": f'<a href="{url}">{url}</a>',
+            "Topic": topic,
+            "Original": f'<a href="{url}">{url}</a>',
+            "Latest": f'<a href="{url}">{url}</a>',
+            "Tag": detail,
+        }
+
+    rows.append(row)
 
     write_to_csv(rows)
     commit_and_push_outputs()
