@@ -43,9 +43,9 @@ def parse_case_page(html, url, detail="", topic=""):
     court_h2 = soup.find("h2")
     court = court_h2.get_text(strip=True) if court_h2 else "N/A"
 
-    # ---- Fetch entries ----
-    orig_resp = fetch_entry_page(url, order="asc")
-    last_resp = fetch_entry_page(url, order="desc")
+    # Fetch first and latest entries using modified URLs
+    orig_resp = fetch_entry_page(f"{url}?order_by=asc")
+    last_resp = fetch_entry_page(f"{url}?order_by=desc")
 
     orig_date, orig_link = (
         extract_entry_data(orig_resp.text, base_url) if orig_resp else ("N/A", "N/A")
