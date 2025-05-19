@@ -1,8 +1,10 @@
+# scraper/parser.py
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from datetime import datetime
 import re
 from scraper.fetch import fetch_entry_pages
+
 
 def extract_entry_data(html, base_url):
     soup = BeautifulSoup(html, "html.parser")
@@ -27,6 +29,7 @@ def extract_entry_data(html, base_url):
     link = urljoin(base_url, a_tag["href"]) if a_tag else "N/A"
 
     return date, link
+
 
 def parse_case_page(url, detail="", topic=""):
     base_url = "https://www.courtlistener.com"

@@ -9,11 +9,14 @@ user_agents = [
     "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0"
 ]
 
+
 def get_headers():
     return {"User-Agent": random.choice(user_agents)}
 
+
 def jittered_delay(base=2.0, variance=0.5):
     time.sleep(random.uniform(base - variance, base + variance))
+
 
 def fetch_with_retries(url, max_retries=5, delay=2):
     for attempt in range(max_retries):
@@ -50,6 +53,7 @@ def fetch_with_retries(url, max_retries=5, delay=2):
 
     print(f"Failed to fetch {url} after {max_retries} retries.")
     return None
+
 
 def fetch_entry_pages(case_url):
     base_resp = fetch_with_retries(case_url)
