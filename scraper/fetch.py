@@ -4,7 +4,7 @@ import random
 import requests
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 user_agents = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
@@ -12,19 +12,19 @@ user_agents = [
     "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0"
 ]
 
-CACHE_FILE = "cache_202.json"
+CACHE_202 = "cache_202.json"
 COOLDOWN_MINUTES = 15
 
 
 def load_202_cache():
-    if os.path.exists(CACHE_FILE):
-        with open(CACHE_FILE, "r", encoding="utf-8") as f:
+    if os.path.exists(CACHE_202):
+        with open(CACHE_202, "r", encoding="utf-8") as f:
             return json.load(f)
     return {}
 
 
 def save_202_cache(cache):
-    with open(CACHE_FILE, "w", encoding="utf-8") as f:
+    with open(CACHE_202, "w", encoding="utf-8") as f:
         json.dump(cache, f, indent=2)
 
 
@@ -33,7 +33,7 @@ def should_skip_url(url):
     if url in cache:
         try:
             ts = datetime.fromisoformat(cache[url])
-            if datetime.utcnow() < ts + timedelta(minutes=COOLDOWN_MINUTES):
+            if datetime.now(timezone.utc) < ts + timedelta(minutes=COOLDOWN_MINUTES):
                 print(f"Skipping {url} — within 202 cooldown window.")
                 return True
         except ValueError:
@@ -43,7 +43,7 @@ def should_skip_url(url):
 
 def update_202_cache(url):
     cache = load_202_cache()
-    cache[url] = datetime.utcnow().isoformat()
+    cache[url] = datetime.now(timezone.utc).isoformat()
     save_202_cache(cache)
 
 
