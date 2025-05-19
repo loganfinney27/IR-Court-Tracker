@@ -59,45 +59,45 @@ def fetch_with_retries(url, max_retries=5, delay=2):
     if should_skip_url(url):
         return None
 
-    updated_cache = False
-
     for attempt in range(max_retries):
         try:
+            print(f"[{attempt+1}] Fetching: {url}", flush=True)
             response = requests.get(url, headers=get_headers(), timeout=10)
 
             if response.status_code == 200:
+                print(f"[{attempt+1}] Success (200): {url}", flush=True)
                 return response
 
             elif response.status_code == 202:
-                print(f"[{attempt+1}] 202 Accepted for {url} — retrying...")
-                if not updated_cache:
-                    update_202_cache(url)
-                    updated_cache = True
-                jittered_delay(base=delay, variance=1.0)
+                print(f"[{attempt+1}] 202 Accepted: {url}", flush=True)
+                update_202_cache(url)
+                print(f"URL {url} added to cooldown cache. Skipping retries.", flush=True)
+                return None  # Do not retry further
 
             elif response.status_code in {429, 503}:
-                print(f"[{attempt+1}] Status {response.status_code} for {url} — retrying...")
+                print(f"[{attempt+1}] Status {response.status_code} for {url} — retrying...", flush=True)
                 if "Retry-After" in response.headers:
                     retry_after = int(response.headers["Retry-After"])
-                    print(f"Retry-After: {retry_after} seconds")
+                    print(f"Retry-After: {retry_after} seconds", flush=True)
                     time.sleep(retry_after)
                 else:
                     jittered_delay(base=delay, variance=1.0)
 
             elif response.status_code in {400, 401, 403, 404}:
-                print(f"Fast-fail for status {response.status_code} on {url}")
+                print(f"[{attempt+1}] Fast-fail ({response.status_code}) for {url}", flush=True)
                 return None
 
             else:
-                print(f"Unhandled status {response.status_code} for {url}")
+                print(f"[{attempt+1}] Unhandled status {response.status_code} for {url}", flush=True)
                 return None
 
         except requests.RequestException as e:
-            print(f"[{attempt+1}] Request error: {e} for {url}")
+            print(f"[{attempt+1}] Request error: {e} for {url}", flush=True)
             jittered_delay(base=delay, variance=1.0)
 
-    print(f"Failed to fetch {url} after {max_retries} retries.")
+    print(f"Failed to fetch {url} after {max_retries} retries.", flush=True)
     return None
+
 
 
 def fetch_entry_pages(case_url):
