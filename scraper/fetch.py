@@ -101,7 +101,19 @@ def fetch_with_retries(url, max_retries=5, delay=2):
 
 
 def fetch_entry_pages(case_url):
-    base_resp = fetch_with_retries(case_url)
-    asc_resp = fetch_with_retries(f"{case_url}?order_by=asc")
-    desc_resp = fetch_with_retries(f"{case_url}?order_by=desc")
+    print(f"\n--- Fetching pages for case: {case_url} ---", flush=True)
+
+    base_url = case_url
+    asc_url = f"{case_url}?order_by=asc"
+    desc_url = f"{case_url}?order_by=desc"
+
+    print(f"Fetching base page: {base_url}", flush=True)
+    base_resp = fetch_with_retries(base_url)
+
+    print(f"Fetching ascending entry page: {asc_url}", flush=True)
+    asc_resp = fetch_with_retries(asc_url)
+
+    print(f"Fetching descending entry page: {desc_url}", flush=True)
+    desc_resp = fetch_with_retries(desc_url)
+
     return base_resp, asc_resp, desc_resp
