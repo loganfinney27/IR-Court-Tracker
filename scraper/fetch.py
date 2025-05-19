@@ -31,10 +31,13 @@ def save_202_cache(cache):
 def should_skip_url(url):
     cache = load_202_cache()
     if url in cache:
-        ts = datetime.fromisoformat(cache[url])
-        if datetime.utcnow() < ts + timedelta(minutes=COOLDOWN_MINUTES):
-            print(f"Skipping {url} — within 202 cooldown window.")
-            return True
+        try:
+            ts = datetime.fromisoformat(cache[url])
+            if datetime.utcnow() < ts + timedelta(minutes=COOLDOWN_MINUTES):
+                print(f"Skipping {url} — within 202 cooldown window.")
+                return True
+        except ValueError:
+            print(f"Invalid timestamp in cache for {url}, ignoring.")
     return False
 
 
@@ -56,6 +59,8 @@ def fetch_with_retries(url, max_retries=5, delay=2):
     if should_skip_url(url):
         return None
 
+    updated_cache = False
+
     for attempt in range(max_retries):
         try:
             response = requests.get(url, headers=get_headers(), timeout=10)
@@ -65,7 +70,9 @@ def fetch_with_retries(url, max_retries=5, delay=2):
 
             elif response.status_code == 202:
                 print(f"[{attempt+1}] 202 Accepted for {url} — retrying...")
-                update_202_cache(url)
+                if not updated_cache:
+                    update_202_cache(url)
+                    updated_cache = True
                 jittered_delay(base=delay, variance=1.0)
 
             elif response.status_code in {429, 503}:
