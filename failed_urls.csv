@@ -1,4 +1,7 @@
 Topic,URL,Reason
-Abortion,https://www.courtlistener.com/docket/67612313/united-states-v-mike-moyle-speaker-of-idaho-house-representatives/,Failed to fetch (network error or non-200 response)
-Executions,https://www.courtlistener.com/docket/69444722/the-associated-press-v-tewalt/,Failed to fetch (network error or non-200 response)
-LGBTQ,https://www.courtlistener.com/docket/67564599/roe-v-critchfield/,Failed to fetch (network error or non-200 response)
+Libraries,https://www.courtlistener.com/docket/69609277/penguin-random-house-llc-v-labrador/,Status 403
+Abortion,https://www.courtlistener.com/docket/69543248/st-lukes-health-system-ltd-v-labrador/,Status 403
+Immigration,https://www.courtlistener.com/docket/69802434/idaho-organization-of-resource-councils-v-labrador/,Status 403
+Abortion,https://www.courtlistener.com/docket/67612313/united-states-v-mike-moyle-speaker-of-idaho-house-representatives/,Status 403
+Executions,https://www.courtlistener.com/docket/69444722/the-associated-press-v-tewalt/,Status 403
+LGBTQ,https://www.courtlistener.com/docket/67564599/roe-v-critchfield/,Status 403
