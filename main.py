@@ -2,7 +2,7 @@
 import os
 import csv
 from scraper.urls import load_urls
-from scraper.fetch import fetch_entry_page
+from scraper.fetch import session
 from scraper.parser import parse_case_page
 from scraper.pipeline import write_to_csv
 from scraper.failures import log_failure
@@ -26,9 +26,21 @@ def main():
         url = case["url"]
         detail = case["detail"]
 
-        response = fetch_ready_page(url, delay=2)
-        if response is None:
-            reason = "Failed to fetch (network error or non-200 response)"
+
+        try:
+            print(f"Fetching case page: {url}")
+            response = session.get(url, timeout=10)
+            if response.status_code != 200:
+                reason = f"Status {response.status_code}"
+                log_failure(topic, url, reason)
+                print(f"Skipping {topic} ({url}) — {reason}")
+                continue
+
+            row = parse_case_page(response.text, url, detail=detail, topic=topic)
+            rows.append(row)
+
+        except Exception as e:
+            reason = f"Exception: {e}"
             log_failure(topic, url, reason)
             print(f"Skipping {topic} ({url})")
             continue

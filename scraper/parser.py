@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from datetime import datetime
 import re
-from scraper.fetch import fetch_ready_page, fetch_first_entry_page, fetch_latest_entry_page
+from scraper.fetch import fetch_entry_page
 
 
 def extract_entry_data(html, base_url):
@@ -43,9 +43,9 @@ def parse_case_page(html, url, detail="", topic=""):
     court_h2 = soup.find("h2")
     court = court_h2.get_text(strip=True) if court_h2 else "N/A"
 
-    # ---- Fetch first and latest entries ----
-    orig_resp = fetch_first_entry_page(url)
-    last_resp = fetch_latest_entry_page(url)
+    # ---- Fetch entries ----
+    orig_resp = fetch_entry_page(url, order="asc")
+    last_resp = fetch_entry_page(url, order="desc")
 
     orig_date, orig_link = (
         extract_entry_data(orig_resp.text, base_url) if orig_resp else ("N/A", "N/A")
