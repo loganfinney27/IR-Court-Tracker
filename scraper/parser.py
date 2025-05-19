@@ -1,10 +1,8 @@
-# scraper/parser.py
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from datetime import datetime
 import re
-from scraper.fetch import fetch_entry_page
-
+from scraper.fetch import fetch_entry_pages
 
 def extract_entry_data(html, base_url):
     soup = BeautifulSoup(html, "html.parser")
@@ -30,10 +28,14 @@ def extract_entry_data(html, base_url):
 
     return date, link
 
-
-def parse_case_page(html, url, detail="", topic=""):
+def parse_case_page(url, detail="", topic=""):
     base_url = "https://www.courtlistener.com"
-    soup = BeautifulSoup(html, "html.parser")
+
+    base_resp, first_resp, latest_resp = fetch_entry_pages(url)
+    if not base_resp:
+        return None  # Handle failure in main script
+
+    soup = BeautifulSoup(base_resp.text, "html.parser")
 
     # ---- Case Title ----
     full_title = soup.title.string.strip() if soup.title else "N/A"
@@ -43,15 +45,11 @@ def parse_case_page(html, url, detail="", topic=""):
     court_h2 = soup.find("h2")
     court = court_h2.get_text(strip=True) if court_h2 else "N/A"
 
-    # Fetch first and latest entries using modified URLs
-    orig_resp = fetch_entry_page(f"{url}?order_by=asc")
-    last_resp = fetch_entry_page(f"{url}?order_by=desc")
-
     orig_date, orig_link = (
-        extract_entry_data(orig_resp.text, base_url) if orig_resp else ("N/A", "N/A")
+        extract_entry_data(first_resp.text, base_url) if first_resp else ("N/A", "N/A")
     )
     latest_date, latest_link = (
-        extract_entry_data(last_resp.text, base_url) if last_resp else ("N/A", "N/A")
+        extract_entry_data(latest_resp.text, base_url) if latest_resp else ("N/A", "N/A")
     )
 
     return {

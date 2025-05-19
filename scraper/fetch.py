@@ -1,5 +1,4 @@
-# scraper/fetch.py
-import time
+# scraper/fetch.pyimport time
 import random
 import requests
 
@@ -9,16 +8,15 @@ user_agents = [
     "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0"
 ]
 
-fast_fail_statuses = {400, 401, 403, 404}
-
 def get_headers():
     return {"User-Agent": random.choice(user_agents)}
 
 def jittered_delay(base=2.0, variance=0.5):
     time.sleep(random.uniform(base - variance, base + variance))
 
-def fetch_entry_page(url, max_retries=5, delay=2.0):
+def fetch_with_retries(url, max_retries=5, delay=2):
     headers = get_headers()
+    fast_fail_statuses = {400, 401, 403, 404}
 
     for attempt in range(max_retries):
         try:
@@ -51,3 +49,10 @@ def fetch_entry_page(url, max_retries=5, delay=2.0):
 
     print(f"Failed to fetch {url} after {max_retries} attempts.")
     return None
+
+def fetch_entry_pages(case_url):
+    base_resp = fetch_with_retries(case_url)
+    first_resp = fetch_with_retries(f"{case_url}?order_by=asc")
+    latest_resp = fetch_with_retries(f"{case_url}?order_by=desc")
+    return base_resp, first_resp, latest_resp
+
