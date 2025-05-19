@@ -2,7 +2,7 @@
 import os
 import csv
 from scraper.urls import load_urls
-from scraper.fetch import fetch_ready_page
+from scraper.fetch import fetch_entry_page
 from scraper.parser import parse_case_page
 from scraper.pipeline import write_to_csv
 from scraper.failures import log_failure
