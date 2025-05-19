@@ -9,6 +9,10 @@ from scraper.commit import commit_and_push_outputs
 
 
 def main():
+
+    if os.path.exists("cache_202.json"):
+        os.remove("cache_202.json")
+
     if os.path.exists("failed_urls.csv"):
         os.remove("failed_urls.csv")
 
